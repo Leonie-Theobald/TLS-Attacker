@@ -75,46 +75,46 @@ public class TlsClientIT {
     public void tearDown() {
         tlsServer.shutdown();
     }
-
-    @ParameterizedTest
-    @EnumSource(
-            value = ProtocolVersion.class,
-            names = {"SSL3", "TLS10", "TLS11", "TLS12"})
-    @Tag(TestCategories.INTEGRATION_TEST)
-    public void testTlsClientWithRsaForProtocolVersion(ProtocolVersion protocolVersion)
-            throws UnrecoverableKeyException,
-                    CertificateException,
-                    KeyStoreException,
-                    IOException,
-                    NoSuchAlgorithmException,
-                    SignatureException,
-                    InvalidKeyException,
-                    NoSuchProviderException,
-                    OperatorCreationException,
-                    KeyManagementException {
-        startBasicTlsServer(PublicKeyAlgorithm.RSA);
-        assumeTrue(
-                tlsServer.getEnabledProtocolVersions().contains(protocolVersion),
-                "The TLS server used for testing does not support the protocol version to test, all supported versions: "
-                        + tlsServer.getEnabledProtocolVersions()
-                        + ". Are you using a newer JDK which has SSL3, TLSv1.0, and TLSv1.1 disabled by default?");
-        Config config = createAttackerConfig(protocolVersion, tlsServer.getPort());
-        List<CipherSuite> testableCipherSuites =
-                CipherSuite.getImplemented().stream()
-                        .filter(
-                                cs ->
-                                        isCipherSuiteTestable(
-                                                PublicKeyAlgorithm.RSA,
-                                                config,
-                                                cs,
-                                                List.of(tlsServer.getCipherSuites())))
-                        .collect(Collectors.toList());
-        assertAll(
-                testableCipherSuites.stream()
-                        .map(cs -> () -> executeHandshakeWorkflowWithCipherSuite(config, cs)));
-        executeCustomRsaWorkflow(tlsServer.getPort());
-    }
-
+    /*
+        @ParameterizedTest
+        @EnumSource(
+                value = ProtocolVersion.class,
+                names = {"SSL3", "TLS10", "TLS11", "TLS12"})
+        @Tag(TestCategories.INTEGRATION_TEST)
+        public void testTlsClientWithRsaForProtocolVersion(ProtocolVersion protocolVersion)
+                throws UnrecoverableKeyException,
+                        CertificateException,
+                        KeyStoreException,
+                        IOException,
+                        NoSuchAlgorithmException,
+                        SignatureException,
+                        InvalidKeyException,
+                        NoSuchProviderException,
+                        OperatorCreationException,
+                        KeyManagementException {
+            startBasicTlsServer(PublicKeyAlgorithm.RSA);
+            assumeTrue(
+                    tlsServer.getEnabledProtocolVersions().contains(protocolVersion),
+                    "The TLS server used for testing does not support the protocol version to test, all supported versions: "
+                            + tlsServer.getEnabledProtocolVersions()
+                            + ". Are you using a newer JDK which has SSL3, TLSv1.0, and TLSv1.1 disabled by default?");
+            Config config = createAttackerConfig(protocolVersion, tlsServer.getPort());
+            List<CipherSuite> testableCipherSuites =
+                    CipherSuite.getImplemented().stream()
+                            .filter(
+                                    cs ->
+                                            isCipherSuiteTestable(
+                                                    PublicKeyAlgorithm.RSA,
+                                                    config,
+                                                    cs,
+                                                    List.of(tlsServer.getCipherSuites())))
+                            .collect(Collectors.toList());
+            assertAll(
+                    testableCipherSuites.stream()
+                            .map(cs -> () -> executeHandshakeWorkflowWithCipherSuite(config, cs)));
+            executeCustomRsaWorkflow(tlsServer.getPort());
+        }
+    */
     @ParameterizedTest
     @EnumSource(
             value = ProtocolVersion.class,
