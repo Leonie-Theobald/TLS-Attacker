@@ -85,7 +85,6 @@ public abstract class WorkflowExecutor {
      * @param context
      */
     public void initTransportHandler(Context context) {
-
         if (context.getTransportHandler() == null) {
             if (context.getConnection() == null) {
                 throw new ConfigurationException("Connection end not set");

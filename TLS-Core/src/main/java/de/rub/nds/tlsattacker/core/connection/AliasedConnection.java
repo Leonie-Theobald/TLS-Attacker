@@ -162,8 +162,10 @@ public abstract class AliasedConnection extends Connection implements Aliasable 
         if (transportHandlerType == null) {
             transportHandlerType = defaultCon.getTransportHandlerType();
             if (transportHandlerType == null) {
-
-                transportHandlerType = DEFAULT_TRANSPORT_HANDLER_TYPE;
+                // TODO: hier manuell überschrieben / eigentlich will ich den transportHandlerType
+                // automatisch setzen, wenn ich FILE habe
+                transportHandlerType = TransportHandlerType.FILE;
+                // transportHandlerType = DEFAULT_TRANSPORT_HANDLER_TYPE;
             }
         }
         if (timeout == null) {

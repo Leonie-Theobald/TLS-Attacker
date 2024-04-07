@@ -15,6 +15,7 @@ public class WorkflowExecutorFactory {
 
     public static WorkflowExecutor createWorkflowExecutor(WorkflowExecutorType type, State state) {
         switch (type) {
+                // TODO: brauche ich hier eigenen WorkflowExecutor??
             case DEFAULT:
                 return new DefaultWorkflowExecutor(state);
             case THREADED_SERVER:

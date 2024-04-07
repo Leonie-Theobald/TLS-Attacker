@@ -16,6 +16,7 @@ import de.rub.nds.tlsattacker.core.exceptions.ConfigurationException;
 import de.rub.nds.tlsattacker.core.layer.LayerStack;
 import de.rub.nds.tlsattacker.core.layer.LayerStackFactory;
 import de.rub.nds.tlsattacker.core.layer.constant.LayerConfiguration;
+import de.rub.nds.tlsattacker.core.layer.context.FileContext;
 import de.rub.nds.tlsattacker.core.layer.context.HttpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TcpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TlsContext;
@@ -51,6 +52,8 @@ public class Context {
     private HttpContext httpContext;
 
     private TlsContext tlsContext;
+
+    private FileContext fileContext;
 
     private LayerStack layerStack;
 
@@ -89,6 +92,14 @@ public class Context {
         this.config = config;
         this.connection = connection;
         prepareWithLayers(config.getDefaultLayerConfiguration());
+    }
+
+    public FileContext getFileContext() {
+        return fileContext;
+    }
+
+    public void setFileContext(FileContext fileContext) {
+        this.fileContext = fileContext;
     }
 
     public TcpContext getTcpContext() {
@@ -191,6 +202,7 @@ public class Context {
         tlsContext = new TlsContext(this);
         httpContext = new HttpContext(this);
         tcpContext = new TcpContext(this);
+        fileContext = new FileContext(this);
         layerStack = LayerStackFactory.createLayerStack(type, this);
         this.setLayerStack(layerStack);
     }

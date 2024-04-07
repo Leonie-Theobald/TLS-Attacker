@@ -8,6 +8,8 @@
  */
 package de.rub.nds.tlsattacker.transport;
 
+import de.rub.nds.tlsattacker.transport.file.ClientFileTransportHandler;
+import de.rub.nds.tlsattacker.transport.file.ServerFileTransportHandler;
 import de.rub.nds.tlsattacker.transport.tcp.ClientTcpNoDelayTransportHandler;
 import de.rub.nds.tlsattacker.transport.tcp.ClientTcpTransportHandler;
 import de.rub.nds.tlsattacker.transport.tcp.ServerTcpTransportHandler;
@@ -25,9 +27,16 @@ import de.rub.nds.tlsattacker.transport.udp.timing.TimingServerUdpTransportHandl
 public class TransportHandlerFactory {
 
     public static TransportHandler createTransportHandler(Connection con) {
+
         ConnectionEndType localConEndType = con.getLocalConnectionEndType();
 
         switch (con.getTransportHandlerType()) {
+            case FILE:
+                if (localConEndType == ConnectionEndType.CLIENT) {
+                    return new ClientFileTransportHandler(con);
+                } else {
+                    return new ServerFileTransportHandler(con);
+                }
             case TCP:
                 if (localConEndType == ConnectionEndType.CLIENT) {
                     return new ClientTcpTransportHandler(con);

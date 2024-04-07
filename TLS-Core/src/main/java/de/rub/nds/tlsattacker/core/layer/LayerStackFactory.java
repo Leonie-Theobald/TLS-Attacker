@@ -9,6 +9,7 @@
 package de.rub.nds.tlsattacker.core.layer;
 
 import de.rub.nds.tlsattacker.core.layer.constant.LayerConfiguration;
+import de.rub.nds.tlsattacker.core.layer.context.FileContext;
 import de.rub.nds.tlsattacker.core.layer.context.HttpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TcpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TlsContext;
@@ -28,6 +29,7 @@ public class LayerStackFactory {
         TlsContext tlsContext = context.getTlsContext();
         TcpContext tcpContext = context.getTcpContext();
         HttpContext httpContext = context.getHttpContext();
+        FileContext fileContext = context.getFileContext();
 
         switch (type) {
             case OPEN_VPN:
@@ -64,7 +66,15 @@ public class LayerStackFactory {
                         new LayerStack(
                                 context, new SSL2Layer(tlsContext), new TcpLayer(tcpContext));
                 return layerStack;
-
+            case DTLS_FILE:
+                layerStack =
+                        new LayerStack(
+                                context,
+                                new MessageLayer(tlsContext),
+                                new RecordLayer(tlsContext),
+                                new FileLayer(fileContext));
+                context.setLayerStack(layerStack);
+                return layerStack;
             default:
                 throw new RuntimeException("Unknown LayerStackType: " + type.name());
         }

@@ -15,6 +15,7 @@ import de.rub.nds.tlsattacker.core.constants.RunningModeType;
 import de.rub.nds.tlsattacker.core.exceptions.ConfigurationException;
 import de.rub.nds.tlsattacker.core.layer.LayerStack;
 import de.rub.nds.tlsattacker.core.layer.LayerStackFactory;
+import de.rub.nds.tlsattacker.core.layer.context.FileContext;
 import de.rub.nds.tlsattacker.core.layer.context.HttpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TcpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TlsContext;
@@ -138,7 +139,6 @@ public class State {
             throw new ConfigurationException("Could not load workflow trace, type is null");
         }
         WorkflowTrace trace;
-
         WorkflowConfigurationFactory factory = new WorkflowConfigurationFactory(config);
         trace = factory.createWorkflowTrace(config.getWorkflowTraceType(), runningMode);
         LOGGER.debug("Created new " + config.getWorkflowTraceType() + " workflow trace");
@@ -225,6 +225,14 @@ public class State {
 
     public TcpContext getTcpContext() {
         return getContext().getTcpContext();
+    }
+
+    public FileContext getFileContext(String alias) {
+        return getContext(alias).getFileContext();
+    }
+
+    public FileContext getFileContext() {
+        return getContext().getFileContext();
     }
 
     public List<Context> getAllContexts() {

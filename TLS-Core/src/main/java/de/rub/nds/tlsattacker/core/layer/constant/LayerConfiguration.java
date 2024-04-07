@@ -21,5 +21,6 @@ public enum LayerConfiguration {
 
     STARTTLS,
     HTTPS,
-    SSL2;
+    SSL2,
+    DTLS_FILE;
 }
