@@ -86,12 +86,6 @@ public class FileLayer extends ProtocolLayer<LayerProcessingHint, DataContainer>
                 LOGGER.debug(e);
             }
         }
-        try {
-            // TODO: Remove time delay
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            LOGGER.debug(e);
-        }
 
         currentInputStream =
                 new HintedInputStreamAdapterStream(null, getTransportHandler().getInputStream());
