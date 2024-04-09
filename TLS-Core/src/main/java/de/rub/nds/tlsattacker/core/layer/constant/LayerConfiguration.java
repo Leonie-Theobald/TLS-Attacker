@@ -18,9 +18,8 @@ public enum LayerConfiguration {
     DTLS,
     QUIC,
     OPEN_VPN,
-
     STARTTLS,
     HTTPS,
     SSL2,
-    DTLS_FILE;
+    TLS_FILE;
 }

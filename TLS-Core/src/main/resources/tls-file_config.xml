@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <config>
-    <defaultLayerConfiguration>DTLS_FILE</defaultLayerConfiguration>
+    <defaultLayerConfiguration>TLS_FILE</defaultLayerConfiguration>
     <defaultHandshakeSecret>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</defaultHandshakeSecret>
     <preferredCertificateSignatureType>RSA</preferredCertificateSignatureType>
     <preferredCertificateSignatureGroup>SECP256R1</preferredCertificateSignatureGroup>

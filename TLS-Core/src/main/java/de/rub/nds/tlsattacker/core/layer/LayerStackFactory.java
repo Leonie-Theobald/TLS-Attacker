@@ -66,7 +66,7 @@ public class LayerStackFactory {
                         new LayerStack(
                                 context, new SSL2Layer(tlsContext), new TcpLayer(tcpContext));
                 return layerStack;
-            case DTLS_FILE:
+            case TLS_FILE:
                 layerStack =
                         new LayerStack(
                                 context,

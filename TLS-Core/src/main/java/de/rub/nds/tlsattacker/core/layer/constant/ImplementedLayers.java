@@ -18,7 +18,7 @@ public enum ImplementedLayers implements LayerType {
     DTLS_FRAGMENT,
     HTTP,
     SSL2,
-    DTLS_FILE;
+    TLS_FILE;
 
     @Override
     public String getName() {

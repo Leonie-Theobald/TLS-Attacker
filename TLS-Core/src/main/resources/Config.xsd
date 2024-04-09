@@ -3439,7 +3439,7 @@
       <xs:enumeration value="STARTTLS"/>
       <xs:enumeration value="HTTPS"/>
       <xs:enumeration value="SSL2"/>
-      <xs:enumeration value="DTLS_FILE"/>
+      <xs:enumeration value="TLS_FILE"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -3665,6 +3665,7 @@
       <xs:enumeration value="TCP"/>
       <xs:enumeration value="EAP_TLS"/>
       <xs:enumeration value="UDP"/>
+      <xs:enumeration value="FILE"/>
       <xs:enumeration value="STREAM"/>
       <xs:enumeration value="TCP_TIMING"/>
       <xs:enumeration value="UDP_TIMING"/>

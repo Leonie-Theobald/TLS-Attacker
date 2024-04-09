@@ -16,5 +16,5 @@ public enum ProtocolConfiguration {
     DTLS,
     OPENVPN,
     QUIC,
-    DTLS_FILE
+    TLS_FILE
 }

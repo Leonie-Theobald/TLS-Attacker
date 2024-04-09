@@ -34,7 +34,7 @@ public class FileLayer extends ProtocolLayer<LayerProcessingHint, DataContainer>
     private final FileContext context;
 
     public FileLayer(FileContext context) {
-        super(ImplementedLayers.DTLS_FILE);
+        super(ImplementedLayers.TLS_FILE);
         this.context = context;
     }
 
