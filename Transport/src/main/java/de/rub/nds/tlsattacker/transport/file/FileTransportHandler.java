@@ -20,30 +20,17 @@ public abstract class FileTransportHandler extends TransportHandler {
 
     private Logger LOGGER = LogManager.getLogger();
 
-    // protected DatagramSocket socket;
-
-    // protected int port;
-
     protected FileReader inputFile;
     protected FileWriter outputFile;
 
     public FileTransportHandler(Connection con) {
         super(con);
     }
-    /*
-        public UdpTransportHandler(long firstTimeout, long timeout, ConnectionEndType type) {
-            super(firstTimeout, timeout, type);
-        }
-    */
+
     @Override
     public void setTimeout(long timeout) {
-        // TODO: macht noch keinen Sinn
-        // try {
-        this.timeout = timeout;
-        // socket.setSoTimeout((int) timeout);
-        // } catch (SocketException ex) {
-        // LOGGER.error("Could not adjust socket timeout", ex);
-        // }
+        // waiting for a file to read doesn't have a time out available
+        // nothing todo here really
     }
 
     @Override
@@ -55,29 +42,5 @@ public abstract class FileTransportHandler extends TransportHandler {
     @Override
     public boolean isClosed() throws IOException {
         return (inputFile.read() == -1);
-    }
-
-    public Integer getSrcPort() {
-        /*
-        if (socket == null) {
-            // mimic socket.getLocalPort() behavior as if socket was closed
-            return -1;
-        }
-
-        return socket.getLocalPort();
-        */
-        return 777;
-    }
-
-    public Integer getDstPort() {
-        /*
-        if (socket == null) {
-            // mimic socket.getPort() behavior as if socket was not connected
-            return -1;
-        }
-
-        return socket.getPort();
-        */
-        return 222222;
     }
 }
