@@ -207,6 +207,7 @@ public class WorkflowTrace implements Serializable {
                 @XmlElement(
                         type = SetEncryptChangeCipherSpecConfigAction.class,
                         name = "SetEncryptChangeCipherSpecConfig"),
+                @XmlElement(type = SetMeasuringActiveAction.class, name = "SetMeasuringActive"),
                 @XmlElement(type = WaitAction.class, name = "Wait"),
                 @XmlElement(type = FlushSessionCacheAction.class, name = "FlushSessionCache"),
                 @XmlElement(type = SendAsciiAction.class, name = "SendAscii"),
