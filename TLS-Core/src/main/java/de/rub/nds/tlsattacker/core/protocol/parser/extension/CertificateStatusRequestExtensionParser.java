@@ -14,6 +14,7 @@ import de.rub.nds.tlsattacker.core.layer.context.TlsContext;
 import de.rub.nds.tlsattacker.core.protocol.message.certificatestatus.CertificateStatusObject;
 import de.rub.nds.tlsattacker.core.protocol.message.extension.CertificateStatusRequestExtensionMessage;
 import de.rub.nds.tlsattacker.core.protocol.parser.CertificateStatusGenericParser;
+import de.rub.nds.tlsattacker.transport.ConnectionEndType;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +35,9 @@ public class CertificateStatusRequestExtensionParser
     @Override
     public void parse(CertificateStatusRequestExtensionMessage msg) {
         if (!selectedVersion.isTLS13()) {
+            if (getTlsContext().getTalkingConnectionEndType() == ConnectionEndType.SERVER) {
+                return;
+            }
             msg.setCertificateStatusRequestType(
                     parseIntField(ExtensionByteLength.CERTIFICATE_STATUS_REQUEST_STATUS_TYPE));
             LOGGER.debug(
