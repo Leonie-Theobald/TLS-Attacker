@@ -18,11 +18,13 @@ import de.rub.nds.tlsattacker.core.layer.LayerStackFactory;
 import de.rub.nds.tlsattacker.core.layer.constant.LayerConfiguration;
 import de.rub.nds.tlsattacker.core.layer.context.HttpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TcpContext;
+import de.rub.nds.tlsattacker.core.layer.context.TimeableTcpContext;
 import de.rub.nds.tlsattacker.core.layer.context.TlsContext;
 import de.rub.nds.tlsattacker.core.workflow.chooser.Chooser;
 import de.rub.nds.tlsattacker.core.workflow.chooser.ChooserFactory;
 import de.rub.nds.tlsattacker.transport.ConnectionEndType;
 import de.rub.nds.tlsattacker.transport.TransportHandler;
+import de.rub.nds.tlsattacker.transport.TransportHandlerType;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import org.apache.logging.log4j.LogManager;
@@ -190,7 +192,12 @@ public class Context {
     public void prepareWithLayers(LayerConfiguration type) {
         tlsContext = new TlsContext(this);
         httpContext = new HttpContext(this);
-        tcpContext = new TcpContext(this);
+        if (config.getDefaultClientConnection().getTransportHandlerType()
+                == TransportHandlerType.TCP_TIMING) {
+            tcpContext = new TimeableTcpContext(this);
+        } else {
+            tcpContext = new TcpContext(this);
+        }
         layerStack = LayerStackFactory.createLayerStack(type, this);
         this.setLayerStack(layerStack);
     }
