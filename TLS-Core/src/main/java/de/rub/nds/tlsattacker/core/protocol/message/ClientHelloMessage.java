@@ -53,4 +53,9 @@ public class ClientHelloMessage extends CoreClientHelloMessage<ClientHelloMessag
         return new ClientHelloSerializer(
                 this, tlsContext.getChooser().getSelectedProtocolVersion());
     }
+
+    @Override
+    public String toShortString() {
+        return "CH";
+    }
 }

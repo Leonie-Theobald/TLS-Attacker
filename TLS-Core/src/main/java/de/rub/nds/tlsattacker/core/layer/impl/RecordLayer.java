@@ -63,6 +63,8 @@ public class RecordLayer extends ProtocolLayer<RecordLayerHint, Record> {
     private int writeEpoch = 0;
     private int readEpoch = 0;
 
+    private ByteArrayOutputStream accumulatedMsgStream = new ByteArrayOutputStream();
+
     public RecordLayer(TlsContext context) {
         super(ImplementedLayers.RECORD);
         this.context = context;
@@ -177,7 +179,6 @@ public class RecordLayer extends ProtocolLayer<RecordLayerHint, Record> {
                             + type
                             + ". Not enough records specified and disabled dynamic record creation in config.");
         }
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         // prepare, serialize, and send records
         for (Record record : records) {
@@ -195,14 +196,19 @@ public class RecordLayer extends ProtocolLayer<RecordLayerHint, Record> {
             try {
                 byte[] recordBytes = record.getRecordSerializer().serialize();
                 record.setCompleteRecordBytes(recordBytes);
-                stream.write(record.getCompleteRecordBytes().getValue());
+                accumulatedMsgStream.write(record.getCompleteRecordBytes().getValue());
             } catch (IOException ex) {
                 throw new PreparationException(
                         "Could not write Record bytes to ByteArrayStream", ex);
             }
             addProducedContainer(record);
         }
-        getLowerLayer().sendData(null, stream.toByteArray());
+        MessageLayer higherLayer = (MessageLayer) getHigherLayer();
+        if (higherLayer.isLastMsgOfTcpFlight) {
+            getLowerLayer().sendData(null, accumulatedMsgStream.toByteArray());
+            // reset output stream
+            accumulatedMsgStream = new ByteArrayOutputStream();
+        }
         return new LayerProcessingResult<>(records, getLayerType(), true);
     }
 

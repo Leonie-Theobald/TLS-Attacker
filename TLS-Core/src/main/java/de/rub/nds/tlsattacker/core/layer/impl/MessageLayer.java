@@ -49,6 +49,8 @@ public class MessageLayer extends ProtocolLayer<LayerProcessingHint, ProtocolMes
 
     private final TlsContext context;
 
+    public boolean isLastMsgOfTcpFlight;
+
     public MessageLayer(TlsContext context) {
         super(ImplementedLayers.MESSAGE);
         this.context = context;
@@ -67,6 +69,16 @@ public class MessageLayer extends ProtocolLayer<LayerProcessingHint, ProtocolMes
         ByteArrayOutputStream collectedMessageStream = new ByteArrayOutputStream();
         if (configuration != null && configuration.getContainerList() != null) {
             for (ProtocolMessage message : getUnprocessedConfiguredContainers()) {
+                // the client collects messages to send them in one TCP packet
+                // the last messages of such a packet are ClientHello, Finished, or Application (in
+                // case of early data)
+                if (message.toShortString() == "FIN"
+                        || message.toShortString() == "APP"
+                        || message.toShortString() == "CH") {
+                    isLastMsgOfTcpFlight = true;
+                } else {
+                    isLastMsgOfTcpFlight = false;
+                }
                 if (containerAlreadyUsedByHigherLayer(message)
                         || !prepareDataContainer(message, context)) {
                     continue;
