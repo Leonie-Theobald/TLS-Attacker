@@ -50,6 +50,7 @@ public class MessageLayer extends ProtocolLayer<LayerProcessingHint, ProtocolMes
     private final TlsContext context;
 
     public boolean isLastMsgOfTcpFlight;
+    private boolean isFirstClientHelloForEarlyData = true;
 
     public MessageLayer(TlsContext context) {
         super(ImplementedLayers.MESSAGE);
@@ -70,12 +71,34 @@ public class MessageLayer extends ProtocolLayer<LayerProcessingHint, ProtocolMes
         if (configuration != null && configuration.getContainerList() != null) {
             for (ProtocolMessage message : getUnprocessedConfiguredContainers()) {
                 // the client collects messages to send them in one TCP packet
-                // the last messages of such a packet are ClientHello, Finished, or Application (in
-                // case of early data)
-                if (message.toShortString() == "FIN"
-                        || message.toShortString() == "APP"
-                        || message.toShortString() == "CH") {
+                // Finished is always a last message
+                // for ClientHello it depends on whether we're using early data
+                // if no early data: ClientHello is also always the last message
+                // if early data: ClientHello is only the last message in first handshake
+
+                if (message.toShortString() == "FIN") {
                     isLastMsgOfTcpFlight = true;
+                } else if (context.getConfig().isAddEarlyDataExtension() == false
+                        && message.toShortString() == "CH") {
+                    isLastMsgOfTcpFlight = true;
+                } else if (context.getConfig().isAddEarlyDataExtension() == true) {
+                    // in case of ClientHello find out whether first or second handshake
+                    if (message.toShortString() == "CH") {
+                        if (isFirstClientHelloForEarlyData) {
+                            // first handshake => no early data to be sent
+                            isLastMsgOfTcpFlight = true;
+                            // next client hello is for resuming handshake
+                            isFirstClientHelloForEarlyData = false;
+                        } else {
+                            // resuming handshake
+                            isLastMsgOfTcpFlight = false; // early data is still following
+                            // next client hello will be for fresh handshake
+                            isFirstClientHelloForEarlyData = true;
+                        }
+                    } else if (message.toShortString() == "APP") {
+                        // this is the early data
+                        isLastMsgOfTcpFlight = true;
+                    }
                 } else {
                     isLastMsgOfTcpFlight = false;
                 }
